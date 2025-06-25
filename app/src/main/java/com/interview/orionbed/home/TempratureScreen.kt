@@ -33,7 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
@@ -41,10 +41,11 @@ import com.interview.orionbed.R
 import com.interview.orionbed.ui.theme.OrionGradient
 import kotlin.math.roundToInt
 
+
 @Composable
 fun TemperatureScreen(
     modifier: Modifier = Modifier,
-    viewModel: TemperatureViewModel = viewModel()
+    viewModel: TemperatureViewModel = hiltViewModel()
 ) {
     val actualTemp by viewModel.temperature.collectAsState()
     val targetTemp by viewModel.targetTemperature.collectAsState()
