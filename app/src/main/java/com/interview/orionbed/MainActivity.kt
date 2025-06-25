@@ -20,9 +20,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             OrionbedTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    TemperatureScreen(
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    MainScreen()
                 }
             }
         }
