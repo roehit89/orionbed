@@ -82,7 +82,7 @@ fun TemperatureScreen(
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(80.dp))
 
             Text(
                 text = "Recommended bedtime today: 9:00 PM",
