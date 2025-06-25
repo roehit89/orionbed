@@ -39,23 +39,33 @@ import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.interview.orionbed.R
 import com.interview.orionbed.ui.theme.OrionGradient
+import kotlin.math.roundToInt
 
 @Composable
 fun TemperatureScreen(
     modifier: Modifier = Modifier,
     viewModel: TemperatureViewModel = viewModel()
 ) {
-    val temperature by viewModel.temperature.collectAsState() // Needed for recomposition
-    val displayedTemp = viewModel.getDisplayedTemperature()
+    val actualTemp by viewModel.temperature.collectAsState()
+    val targetTemp by viewModel.targetTemperature.collectAsState()
+    val isCelsius by viewModel.isCelsius.collectAsState()
+    val isWarmingOrCooling by viewModel.isWarmingOrCooling.collectAsState()
 
-    // Animate when temp changes
+    val displayedTarget = if (isCelsius) {
+        ((targetTemp - 32) * 5 / 9f).roundToInt()
+    } else targetTemp
+
+    val displayedActual = if (isCelsius) {
+        ((actualTemp - 32) * 5 / 9f).roundToInt()
+    } else actualTemp
+
     val animatedTemp by animateIntAsState(
-        targetValue = displayedTemp,
+        targetValue = displayedTarget,
         label = "Temp"
     )
 
     val scaleAnim = remember { Animatable(1f) }
-    LaunchedEffect(temperature) {
+    LaunchedEffect(animatedTemp) {
         scaleAnim.snapTo(1.05f)
         scaleAnim.animateTo(1f, animationSpec = tween(300))
     }
@@ -66,73 +76,130 @@ fun TemperatureScreen(
             .background(OrionGradient),
         contentAlignment = Alignment.Center
     ) {
-        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(R.drawable.iconblack)
-                    .decoderFactory(SvgDecoder.Factory())
-                    .build(),
-                contentDescription = "Orion Logo",
-                modifier = Modifier
-                    .size(280.dp)
-                    .scale(scaleAnim.value)
-                    .align(Alignment.Center)
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Text(
+                text = "Recommended bedtime today: 9:00 PM",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.White.copy(alpha = 0.85f)
             )
 
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "$animatedTemp°",
-                    fontSize = 48.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = viewModel.getUnitLabel(),
-                    fontSize = 14.sp,
-                    color = Color.White.copy(alpha = 0.7f),
-                    modifier = Modifier.clickable { viewModel.toggleUnit() }
-                )
-            }
+            Spacer(modifier = Modifier.height(20.dp))
 
-
-            Surface(
-                onClick = { viewModel.increaseTemp() },
-                shape = CircleShape,
-                color = Color.Black,
-                tonalElevation = 4.dp,
-                shadowElevation = 8.dp,
+            Box(
                 modifier = Modifier
-                    .size(48.dp)
-                    .align(Alignment.Center)
-                    .offset(x = 75.dp, y = -117.dp)
+                    .fillMaxSize()
+                    .weight(1f),
+                contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = "Increase",
-                    tint = Color.White,
-                    modifier = Modifier.padding(10.dp)
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(R.drawable.iconblack)
+                        .decoderFactory(SvgDecoder.Factory())
+                        .build(),
+                    contentDescription = "Orion Logo",
+                    modifier = Modifier
+                        .size(280.dp)
+                        .scale(scaleAnim.value)
+                        .align(Alignment.Center)
                 )
+
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "$animatedTemp°",
+                        fontSize = 48.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = if (isCelsius) "Celsius" else "Fahrenheit",
+                        fontSize = 14.sp,
+                        color = Color.White.copy(alpha = 0.7f),
+                        modifier = Modifier.clickable { viewModel.toggleUnit() }
+                    )
+                }
+
+                Surface(
+                    onClick = { viewModel.increaseTemp() },
+                    shape = CircleShape,
+                    color = Color.Black,
+                    tonalElevation = 4.dp,
+                    shadowElevation = 8.dp,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .align(Alignment.Center)
+                        .offset(x = 75.dp, y = -117.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Add,
+                        contentDescription = "Increase",
+                        tint = Color.White,
+                        modifier = Modifier.padding(10.dp)
+                    )
+                }
+
+                Surface(
+                    onClick = { viewModel.decreaseTemp() },
+                    shape = CircleShape,
+                    color = Color.Black,
+                    tonalElevation = 4.dp,
+                    shadowElevation = 8.dp,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .align(Alignment.Center)
+                        .offset(x = -75.dp, y = 117.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Remove,
+                        contentDescription = "Decrease",
+                        tint = Color.White,
+                        modifier = Modifier.padding(10.dp)
+                    )
+                }
             }
 
-            Surface(
-                onClick = { viewModel.decreaseTemp() },
-                shape = CircleShape,
-                color = Color.Black,
-                tonalElevation = 4.dp,
-                shadowElevation = 8.dp,
-                modifier = Modifier
-                    .size(48.dp)
-                    .align(Alignment.Center)
-                    .offset(x = -75.dp, y = 117.dp)
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "Current mattress temperature",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.White.copy(alpha = 0.85f)
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = "$displayedActual°",
+                fontSize = 20.sp,
+                color = Color.White,
+                fontWeight = FontWeight.SemiBold
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Box(
+                modifier = Modifier.height(24.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    Icons.Default.Remove,
-                    contentDescription = "Decrease",
-                    tint = Color.White,
-                    modifier = Modifier.padding(10.dp)
-                )
+                if (isWarmingOrCooling) {
+                    Text(
+                        text = if (actualTemp < targetTemp) "Warming up..." else "Cooling down...",
+                        fontSize = 14.sp,
+                        color = Color.White.copy(alpha = 0.7f)
+                    )
+                }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
