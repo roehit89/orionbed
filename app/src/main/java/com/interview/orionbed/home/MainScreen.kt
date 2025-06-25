@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import com.interview.orionbed.BottomNavItem
 import com.interview.orionbed.BottomNavigationBar
 import com.interview.orionbed.SettingsScreen
+import com.interview.orionbed.schedules.SchedulesScreen
 import com.interview.orionbed.stats.StatsScreen
 import com.interview.orionbed.ui.theme.OrionGradient
 
@@ -48,15 +49,3 @@ fun MainScreen() {
         }
     }
 }
-
-@Composable
-fun SchedulesScreen() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(OrionGradient), contentAlignment = Alignment.Center
-    ) {
-        Text("Schedules Screen")
-    }
-}
-
