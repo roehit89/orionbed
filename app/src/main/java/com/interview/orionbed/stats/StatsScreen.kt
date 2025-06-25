@@ -1,4 +1,4 @@
-package com.interview.orionbed
+package com.interview.orionbed.stats
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,11 +19,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.interview.orionbed.cards.BreathingCard
-import com.interview.orionbed.cards.DefaultStatCard
-import com.interview.orionbed.cards.HeartRateCard
-import com.interview.orionbed.cards.SleepCard
-import com.interview.orionbed.cards.TempCard
+import com.interview.orionbed.stats.cards.BreathingCard
+import com.interview.orionbed.stats.cards.DefaultStatCard
+import com.interview.orionbed.stats.cards.HeartRateCard
+import com.interview.orionbed.stats.cards.SleepCard
+import com.interview.orionbed.stats.cards.TempCard
 import com.interview.orionbed.ui.theme.OrionGradient
 
 

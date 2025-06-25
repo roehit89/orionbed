@@ -1,4 +1,4 @@
-package com.interview.orionbed
+package com.interview.orionbed.home
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

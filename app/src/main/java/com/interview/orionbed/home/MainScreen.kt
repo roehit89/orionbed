@@ -1,4 +1,4 @@
-package com.interview.orionbed
+package com.interview.orionbed.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,6 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.interview.orionbed.BottomNavItem
+import com.interview.orionbed.BottomNavigationBar
+import com.interview.orionbed.stats.StatsScreen
 import com.interview.orionbed.ui.theme.OrionGradient
 
 

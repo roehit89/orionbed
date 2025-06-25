@@ -1,4 +1,4 @@
-package com.interview.orionbed.cards
+package com.interview.orionbed.stats.cards
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,20 +14,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.interview.orionbed.StatEntry
+import com.interview.orionbed.stats.StatEntry
 
 @Composable
-fun BreathingCard(entry: StatEntry) {
+fun HeartRateCard(entry: StatEntry) {
     Surface(
         shape = RoundedCornerShape(20.dp),
-        color = Color(0xFFE8F5E9),
+        color = Color(0xFFFFEBEE),
         shadowElevation = 4.dp,
         modifier = Modifier
             .fillMaxWidth()
             .height(140.dp)
     ) {
-        Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.SpaceBetween) {
-            Text(entry.title, fontSize = 14.sp, color = Color(0xFF2E7D32))
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(entry.title, color = Color(0xFFD32F2F), fontSize = 16.sp)
             Text(entry.value, fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color.Black)
         }
     }

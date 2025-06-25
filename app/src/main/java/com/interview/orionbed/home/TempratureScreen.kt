@@ -1,4 +1,4 @@
-package com.interview.orionbed
+package com.interview.orionbed.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -25,6 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
+import com.interview.orionbed.R
 import com.interview.orionbed.ui.theme.OrionGradient
 import com.interview.orionbed.ui.theme.OrionbedTheme
 

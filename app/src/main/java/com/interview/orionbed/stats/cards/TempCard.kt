@@ -1,4 +1,4 @@
-package com.interview.orionbed.cards
+package com.interview.orionbed.stats.cards
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.interview.orionbed.StatEntry
+import com.interview.orionbed.stats.StatEntry
 
 @Composable
 fun TempCard(entry: StatEntry) {
