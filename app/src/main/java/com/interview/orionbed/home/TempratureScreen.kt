@@ -1,24 +1,36 @@
 package com.interview.orionbed.home
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -27,14 +39,26 @@ import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.interview.orionbed.R
 import com.interview.orionbed.ui.theme.OrionGradient
-import com.interview.orionbed.ui.theme.OrionbedTheme
 
 @Composable
 fun TemperatureScreen(
     modifier: Modifier = Modifier,
     viewModel: TemperatureViewModel = viewModel()
 ) {
-    val temperature by viewModel.temperature.collectAsState()
+    val temperature by viewModel.temperature.collectAsState() // Needed for recomposition
+    val displayedTemp = viewModel.getDisplayedTemperature()
+
+    // Animate when temp changes
+    val animatedTemp by animateIntAsState(
+        targetValue = displayedTemp,
+        label = "Temp"
+    )
+
+    val scaleAnim = remember { Animatable(1f) }
+    LaunchedEffect(temperature) {
+        scaleAnim.snapTo(1.05f)
+        scaleAnim.animateTo(1f, animationSpec = tween(300))
+    }
 
     Box(
         modifier = Modifier
@@ -42,11 +66,7 @@ fun TemperatureScreen(
             .background(OrionGradient),
         contentAlignment = Alignment.Center
     ) {
-        Box(
-            modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            // SVG Orion logo in center
+        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(R.drawable.iconblack)
@@ -55,72 +75,64 @@ fun TemperatureScreen(
                 contentDescription = "Orion Logo",
                 modifier = Modifier
                     .size(280.dp)
+                    .scale(scaleAnim.value)
                     .align(Alignment.Center)
             )
 
-            // Temperature text in center
-            Text(
-                text = "$temperature°",
-                fontSize = 36.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.Center)
-            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "$animatedTemp°",
+                    fontSize = 48.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = viewModel.getUnitLabel(),
+                    fontSize = 14.sp,
+                    color = Color.White.copy(alpha = 0.7f),
+                    modifier = Modifier.clickable { viewModel.toggleUnit() }
+                )
+            }
 
-            // PLUS button (Surface)
+
             Surface(
                 onClick = { viewModel.increaseTemp() },
                 shape = CircleShape,
-                color = Color.Black, // 🔁 Changed from theme color to black
-                tonalElevation = 6.dp,
+                color = Color.Black,
+                tonalElevation = 4.dp,
                 shadowElevation = 8.dp,
                 modifier = Modifier
+                    .size(48.dp)
                     .align(Alignment.Center)
                     .offset(x = 75.dp, y = -117.dp)
-                    .size(48.dp)
             ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Text(
-                        "+",
-                        fontSize = 20.sp,
-                        color = Color.White
-                    ) // ✅ Use white text for contrast
-                }
+                Icon(
+                    Icons.Default.Add,
+                    contentDescription = "Increase",
+                    tint = Color.White,
+                    modifier = Modifier.padding(10.dp)
+                )
             }
 
-// MINUS button (IconButton)
-            IconButton(
+            Surface(
                 onClick = { viewModel.decreaseTemp() },
+                shape = CircleShape,
+                color = Color.Black,
+                tonalElevation = 4.dp,
+                shadowElevation = 8.dp,
                 modifier = Modifier
+                    .size(48.dp)
                     .align(Alignment.Center)
                     .offset(x = -75.dp, y = 117.dp)
-                    .size(48.dp)
-                    .shadow(8.dp, shape = CircleShape)
-                    .background(Color.Black, CircleShape) // 🔁 Changed from theme color to black
             ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Text(
-                        "-",
-                        fontSize = 20.sp,
-                        color = Color.White
-                    ) // ✅ Use white text for contrast
-                }
+                Icon(
+                    Icons.Default.Remove,
+                    contentDescription = "Decrease",
+                    tint = Color.White,
+                    modifier = Modifier.padding(10.dp)
+                )
             }
         }
     }
 }
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun TemperatureScreenPreview() {
-    // Wrap in your theme if you use one
-    OrionbedTheme {
-        TemperatureScreen()
-    }
-}
-

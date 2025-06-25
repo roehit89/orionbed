@@ -1,28 +1,40 @@
 package com.interview.orionbed.home
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class TemperatureViewModel : ViewModel() {
 
-    // Internal mutable temperature state
-    private val _temperature = MutableStateFlow(72) // Starting temperature
+    private val _temperature = MutableStateFlow(72) // Fahrenheit
     val temperature: StateFlow<Int> = _temperature
 
-    // Max and min bounds for temp control
-    private val minTemp = 60
-    private val maxTemp = 100
+    private val _isCelsius = mutableStateOf(false)
+    val isCelsius: State<Boolean> = _isCelsius
 
     fun increaseTemp() {
-        if (_temperature.value < maxTemp) {
-            _temperature.value += 1
-        }
+        _temperature.value += 1
     }
 
     fun decreaseTemp() {
-        if (_temperature.value > minTemp) {
-            _temperature.value -= 1
+        _temperature.value -= 1
+    }
+
+    fun toggleUnit() {
+        _isCelsius.value = !_isCelsius.value
+    }
+
+    fun getDisplayedTemperature(): Int {
+        return if (_isCelsius.value) {
+            ((_temperature.value - 32) * 5f / 9f).toInt()
+        } else {
+            _temperature.value
         }
+    }
+
+    fun getUnitLabel(): String {
+        return if (_isCelsius.value) "Celsius" else "Fahrenheit"
     }
 }
