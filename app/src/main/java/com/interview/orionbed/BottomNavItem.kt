@@ -15,8 +15,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 
 sealed class BottomNavItem(val route: String, val label: String, val icon: ImageVector) {
     object Home : BottomNavItem("home", "Home", Icons.Default.Home)
-    object Stats : BottomNavItem("stats", "Stats", Icons.Default.InsertChart)      // BarChart ➜ InsertChart
-    object Schedules : BottomNavItem("schedules", "Schedules", Icons.Default.DateRange) // Schedule ➜ DateRange
+    object Stats : BottomNavItem("stats", "Stats", Icons.Default.InsertChart)
+    object Schedules : BottomNavItem("schedules", "Schedules", Icons.Default.DateRange)
     object Settings : BottomNavItem("settings", "Settings", Icons.Default.Settings)
 }
 
