@@ -1,13 +1,24 @@
 package com.interview.orionbed.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.interview.orionbed.network.model.TemperatureRequest
+import com.interview.orionbed.usecase.SetTemperatureUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.Instant
+import javax.inject.Inject
 
-class TemperatureViewModel : ViewModel() {
+@RequiresApi(Build.VERSION_CODES.O)
+@HiltViewModel
+class TemperatureViewModel @Inject constructor(
+    private val setTemperatureUseCase: SetTemperatureUseCase
+) : ViewModel() {
 
     private val _targetTemperature = MutableStateFlow(74)
     val targetTemperature: StateFlow<Int> = _targetTemperature
@@ -25,6 +36,26 @@ class TemperatureViewModel : ViewModel() {
         simulateTemperatureTransition()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun submitTemperature(value: Int) {
+        val timestamp = Instant.now().toString()
+        val deviceId = getDeviceId()
+
+        val request = TemperatureRequest(
+            value = value,
+            timestamp = timestamp,
+            deviceId = deviceId
+        )
+
+        viewModelScope.launch {
+            setTemperatureUseCase(request)
+        }
+    }
+
+    private fun getDeviceId(): String {
+        return "orion-bed-001"
+    }
+
     fun increaseTemp() {
         _targetTemperature.value += 1
         simulateTemperatureTransition()
@@ -39,6 +70,7 @@ class TemperatureViewModel : ViewModel() {
         _isCelsius.value = !_isCelsius.value
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun simulateTemperatureTransition() {
         viewModelScope.launch {
             _isWarmingOrCooling.value = true
@@ -59,6 +91,7 @@ class TemperatureViewModel : ViewModel() {
             }
 
             _isWarmingOrCooling.value = false
+            submitTemperature(target)
         }
     }
 }
