@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.interview.orionbed.network.model.TemperatureRequest
 import com.interview.orionbed.usecase.SetTemperatureUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,6 +33,9 @@ class TemperatureViewModel @Inject constructor(
     private val _isWarmingOrCooling = MutableStateFlow(false)
     val isWarmingOrCooling: StateFlow<Boolean> = _isWarmingOrCooling
 
+    private var transitionJob: Job? = null
+    private var debounceJob: Job? = null
+
     init {
         simulateTemperatureTransition()
     }
@@ -52,6 +56,14 @@ class TemperatureViewModel @Inject constructor(
         }
     }
 
+    private fun debounceSubmit() {
+        debounceJob?.cancel() // Cancel previous pending call
+        debounceJob = viewModelScope.launch {
+            delay(1500) // ⏱️ Wait for 1.5 seconds of inactivity
+            submitTemperature(_targetTemperature.value)
+        }
+    }
+
     private fun getDeviceId(): String {
         return "orion-bed-001"
     }
@@ -59,11 +71,13 @@ class TemperatureViewModel @Inject constructor(
     fun increaseTemp() {
         _targetTemperature.value += 1
         simulateTemperatureTransition()
+        debounceSubmit()
     }
 
     fun decreaseTemp() {
         _targetTemperature.value -= 1
         simulateTemperatureTransition()
+        debounceSubmit()
     }
 
     fun toggleUnit() {
@@ -91,7 +105,6 @@ class TemperatureViewModel @Inject constructor(
             }
 
             _isWarmingOrCooling.value = false
-            submitTemperature(target)
         }
     }
 }
