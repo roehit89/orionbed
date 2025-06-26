@@ -14,7 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.interview.orionbed.stats.StatEntry
+import com.interview.orionbed.network.model.StatEntry
+
 
 @Composable
 fun BreathingCard(entry: StatEntry) {
@@ -27,7 +28,7 @@ fun BreathingCard(entry: StatEntry) {
             .height(140.dp)
     ) {
         Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.SpaceBetween) {
-            Text(entry.title, fontSize = 14.sp, color = Color(0xFF2E7D32))
+            Text(entry.label, fontSize = 14.sp, color = Color(0xFF2E7D32))
             Text(entry.value, fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color.Black)
         }
     }

@@ -1,6 +1,5 @@
 package com.interview.orionbed.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.interview.orionbed.usecase.LoadInitialDataUseCase
@@ -16,16 +15,6 @@ import javax.inject.Inject
 class TemperatureViewModel @Inject constructor(
     private val initialDataUseCase: LoadInitialDataUseCase
 ) : ViewModel() {
-
-    init {
-        viewModelScope.launch {
-            try {
-                val data = initialDataUseCase.invoke()
-            } catch (e: Exception) {
-                Log.e(" zebra ", "API call failed", e)
-            }
-        }
-    }
 
     private val _temperature = MutableStateFlow(74) // current (actual)
     val temperature: StateFlow<Int> = _temperature

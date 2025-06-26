@@ -21,31 +21,25 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.interview.orionbed.network.model.ScheduleItem
 import com.interview.orionbed.ui.theme.OrionGradient
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SchedulesScreen(viewModel: SchedulesViewModel = viewModel()) {
+fun SchedulesScreen(
+    viewModel: SchedulesViewModel = viewModel(),
+    schedules: List<ScheduleItem>
+) {
     val showSheet = viewModel.isBottomSheetVisible.value
     val sheetState = rememberModalBottomSheetState()
-    val scope = rememberCoroutineScope()
-
-    val schedules = listOf(
-        ScheduleItem("Next Alarm", "10:30 PM", Icons.Default.AccessTime),
-        ScheduleItem("Ideal Sleep Time", "11:00 PM – 7:00 AM", Icons.Default.DarkMode),
-        ScheduleItem("Wake Up Window", "6:45 AM – 7:15 AM", Icons.Default.CalendarToday),
-        ScheduleItem("Weekday Schedule", "10:30 PM – 6:30 AM", Icons.Default.CalendarToday),
-        ScheduleItem("Weekend Schedule", "11:30 PM – 8:00 AM", Icons.Default.CalendarToday)
-    )
 
     Box(
         modifier = Modifier
@@ -100,13 +94,20 @@ fun SchedulesScreen(viewModel: SchedulesViewModel = viewModel()) {
 
 @Composable
 fun ScheduleRow(item: ScheduleItem) {
+    val icon: ImageVector = when (item.icon) {
+        "AccessTime" -> Icons.Default.AccessTime
+        "DarkMode" -> Icons.Default.DarkMode
+        "CalendarToday" -> Icons.Default.CalendarToday
+        else -> Icons.Default.AccessTime
+    }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
         Icon(
-            imageVector = item.icon,
-            contentDescription = item.label,
+            imageVector = icon,
+            contentDescription = item.icon,
             tint = Color.White,
             modifier = Modifier
                 .padding(end = 16.dp)
@@ -114,28 +115,16 @@ fun ScheduleRow(item: ScheduleItem) {
         )
         Column {
             Text(
-                text = item.label,
+                text = item.title,
                 color = Color.White.copy(alpha = 0.8f),
                 fontSize = 14.sp
             )
             Text(
-                text = item.value,
+                text = item.time,
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
         }
     }
-}
-
-data class ScheduleItem(
-    val label: String,
-    val value: String,
-    val icon: androidx.compose.ui.graphics.vector.ImageVector
-)
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun PreviewSchedulesScreen() {
-    SchedulesScreen()
 }

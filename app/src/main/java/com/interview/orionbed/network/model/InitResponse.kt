@@ -15,8 +15,12 @@ data class InitResponse(
 data class StatEntry(
     val label: String,
     val value: String,
+    @Json(name = "type") val rawType: String
+) {
     val type: StatType
-)
+        get() = StatType.fromString(rawType)
+}
+
 
 @JsonClass(generateAdapter = true)
 data class ScheduleItem(
@@ -26,17 +30,20 @@ data class ScheduleItem(
 )
 
 
+sealed class StatType(val rawValue: String) {
+    object Sleep : StatType("Sleep")
+    object Temperature : StatType("Temperature")
+    object HeartRate : StatType("HeartRate")
+    object Breathing : StatType("Breathing")
+    data class Unknown(val actual: String) : StatType(actual)
 
-enum class StatType {
-    @Json(name = "Sleep")
-    Sleep,
-
-    @Json(name = "Temperature")
-    Temperature,
-
-    @Json(name = "HeartRate")
-    HeartRate,
-
-    @Json(name = "Breathing")
-    Breathing
+    companion object {
+        fun fromString(value: String): StatType = when (value) {
+            "Sleep" -> Sleep
+            "Temperature" -> Temperature
+            "HeartRate" -> HeartRate
+            "Breathing" -> Breathing
+            else -> Unknown(value)
+        }
+    }
 }

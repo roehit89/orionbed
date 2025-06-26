@@ -14,7 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.interview.orionbed.stats.StatEntry
+import com.interview.orionbed.network.model.StatEntry
+
 
 @Composable
 fun SleepCard(entry: StatEntry) {
@@ -30,7 +31,7 @@ fun SleepCard(entry: StatEntry) {
             modifier = Modifier.padding(20.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(entry.title, color = Color(0xFF01579B), fontSize = 16.sp)
+            Text(entry.label, color = Color(0xFF01579B), fontSize = 16.sp)
             Text(entry.value, fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color.Black)
         }
     }

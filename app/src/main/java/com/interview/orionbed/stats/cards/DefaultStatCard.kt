@@ -14,21 +14,35 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.interview.orionbed.stats.StatEntry
+import com.interview.orionbed.network.model.StatEntry
+
 
 @Composable
 fun DefaultStatCard(entry: StatEntry) {
     Surface(
         shape = RoundedCornerShape(20.dp),
-        color = Color.LightGray.copy(alpha = 0.2f),
+        color = Color(0xFFE0E0E0),
         shadowElevation = 4.dp,
         modifier = Modifier
             .fillMaxWidth()
             .height(140.dp)
     ) {
-        Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.SpaceBetween) {
-            Text(entry.title, fontSize = 14.sp, color = Color.DarkGray)
-            Text(entry.value, fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                entry.label,
+                fontSize = 14.sp,
+                color = Color(0xFF424242)
+            )
+            Text(
+                entry.value,
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
         }
     }
 }
+

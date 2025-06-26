@@ -41,24 +41,25 @@ import com.interview.orionbed.R
 import com.interview.orionbed.ui.theme.OrionGradient
 import kotlin.math.roundToInt
 
-
 @Composable
 fun TemperatureScreen(
     modifier: Modifier = Modifier,
-    viewModel: TemperatureViewModel = hiltViewModel()
+    viewModel: TemperatureViewModel = hiltViewModel(),
+    recommendedBedtime: String,
+    currentTemperature: Int
 ) {
-    val actualTemp by viewModel.temperature.collectAsState()
     val targetTemp by viewModel.targetTemperature.collectAsState()
     val isCelsius by viewModel.isCelsius.collectAsState()
     val isWarmingOrCooling by viewModel.isWarmingOrCooling.collectAsState()
 
+    // Displayed values
     val displayedTarget = if (isCelsius) {
         ((targetTemp - 32) * 5 / 9f).roundToInt()
     } else targetTemp
 
     val displayedActual = if (isCelsius) {
-        ((actualTemp - 32) * 5 / 9f).roundToInt()
-    } else actualTemp
+        ((currentTemperature - 32) * 5 / 9f).roundToInt()
+    } else currentTemperature
 
     val animatedTemp by animateIntAsState(
         targetValue = displayedTarget,
@@ -86,7 +87,7 @@ fun TemperatureScreen(
             Spacer(modifier = Modifier.height(80.dp))
 
             Text(
-                text = "Recommended bedtime today: 9:00 PM",
+                text = "Recommended bedtime today: $recommendedBedtime",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.White.copy(alpha = 0.85f)
@@ -193,7 +194,7 @@ fun TemperatureScreen(
             ) {
                 if (isWarmingOrCooling) {
                     Text(
-                        text = if (actualTemp < targetTemp) "Warming up..." else "Cooling down...",
+                        text = if (currentTemperature < targetTemp) "Warming up..." else "Cooling down...",
                         fontSize = 14.sp,
                         color = Color.White.copy(alpha = 0.7f)
                     )
