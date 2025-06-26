@@ -1,35 +1,35 @@
 package com.interview.orionbed.stats.cards
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Air
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.interview.orionbed.network.model.StatEntry
-
 
 @Composable
 fun BreathingCard(entry: StatEntry) {
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        color = Color(0xFFE8F5E9),
-        shadowElevation = 4.dp,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(140.dp)
-    ) {
-        Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.SpaceBetween) {
-            Text(entry.label, fontSize = 14.sp, color = Color(0xFF2E7D32))
-            Text(entry.value, fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+    StatCardTemplate(
+        entry = entry,
+        accentColor = Color(0xFF66BB6A),
+        icon = Icons.Default.Air,
+        visual = {
+            BreathingWave()
         }
+    )
+}
+
+@Composable
+fun BreathingWave() {
+    androidx.compose.foundation.Canvas(modifier = androidx.compose.ui.Modifier.size(48.dp)) {
+        val height = size.height
+        val width = size.width
+        val path = androidx.compose.ui.graphics.Path().apply {
+            moveTo(0f, height / 2)
+            quadraticBezierTo(width * 0.25f, 0f, width * 0.5f, height / 2)
+            quadraticBezierTo(width * 0.75f, height, width, height / 2)
+        }
+        drawPath(path, color = Color(0xFF66BB6A), style = androidx.compose.ui.graphics.drawscope.Stroke(width = 3f))
     }
 }

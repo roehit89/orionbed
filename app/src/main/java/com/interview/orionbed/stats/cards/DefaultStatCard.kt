@@ -1,48 +1,42 @@
 package com.interview.orionbed.stats.cards
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.interview.orionbed.network.model.StatEntry
-
 
 @Composable
 fun DefaultStatCard(entry: StatEntry) {
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        color = Color(0xFFE0E0E0),
-        shadowElevation = 4.dp,
+    StatCardTemplate(
+        entry = entry,
+        accentColor = Color.Gray,
+        icon = null, // No icon for generic card
+        visual = {
+            NeutralBarGraph()
+        }
+    )
+}
+
+@Composable
+fun NeutralBarGraph() {
+    Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(140.dp)
+            .width(40.dp)
+            .height(32.dp),
+        horizontalArrangement = Arrangement.spacedBy(3.dp),
+        verticalAlignment = Alignment.Bottom
     ) {
-        Column(
-            modifier = Modifier.padding(20.dp),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                entry.label,
-                fontSize = 14.sp,
-                color = Color(0xFF424242)
-            )
-            Text(
-                entry.value,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
+        listOf(8, 16, 12, 20, 10).forEach { heightDp ->
+            Box(
+                modifier = Modifier
+                    .width(4.dp)
+                    .height(heightDp.dp)
+                    .background(Color.Gray, shape = androidx.compose.foundation.shape.RoundedCornerShape(2.dp))
             )
         }
     }
 }
-

@@ -1,38 +1,48 @@
 package com.interview.orionbed.stats.cards
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.interview.orionbed.network.model.StatEntry
-
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun SleepCard(entry: StatEntry) {
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        color = Color(0xFFE1F5FE),
-        shadowElevation = 4.dp,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(140.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(20.dp),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(entry.label, color = Color(0xFF01579B), fontSize = 16.sp)
-            Text(entry.value, fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+    StatCardTemplate(
+        entry = entry,
+        accentColor = Color(0xFF64B5F6),
+        icon = Icons.Default.DarkMode,
+        visual = {
+            SleepStarsVisual()
         }
+    )
+}
+
+@Composable
+fun SleepStarsVisual() {
+    Canvas(modifier = Modifier.size(40.dp)) {
+        // Moon
+        drawCircle(
+            color = Color(0xFF90CAF9),
+            radius = size.minDimension / 5,
+            center = Offset(x = size.width * 0.3f, y = size.height * 0.4f)
+        )
+        // Star
+        drawCircle(
+            color = Color(0xFFBBDEFB),
+            radius = size.minDimension / 10,
+            center = Offset(x = size.width * 0.7f, y = size.height * 0.25f)
+        )
+        // Another star
+        drawCircle(
+            color = Color(0xFFBBDEFB),
+            radius = size.minDimension / 12,
+            center = Offset(x = size.width * 0.55f, y = size.height * 0.15f)
+        )
     }
 }

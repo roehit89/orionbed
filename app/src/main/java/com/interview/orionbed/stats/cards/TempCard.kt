@@ -1,35 +1,48 @@
 package com.interview.orionbed.stats.cards
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.interview.orionbed.network.model.StatEntry
-
 
 @Composable
 fun TempCard(entry: StatEntry) {
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        color = Color(0xFFFFF3E0),
-        shadowElevation = 4.dp,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(140.dp)
-    ) {
-        Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.SpaceBetween) {
-            Text(entry.label, fontSize = 14.sp, color = Color(0xFFEF6C00))
-            Text(entry.value, fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+    StatCardTemplate(
+        entry = entry,
+        accentColor = Color(0xFFFFB74D),
+        icon = Icons.Default.Thermostat,
+        visual = {
+            ThermometerVisual()
         }
+    )
+}
+
+@Composable
+fun ThermometerVisual() {
+    Canvas(modifier = Modifier.size(width = 24.dp, height = 48.dp)) {
+        val width = size.width
+        val height = size.height
+
+        // Thermometer stem
+        drawRoundRect(
+            color = Color.Gray,
+            topLeft = Offset(x = width / 3, y = 0f),
+            size = androidx.compose.ui.geometry.Size(width / 3, height * 0.75f),
+            cornerRadius = CornerRadius(4f)
+        )
+
+        // Thermometer bulb
+        drawCircle(
+            color = Color(0xFFFF8A65),
+            radius = width / 2,
+            center = Offset(x = width / 2, y = height * 0.9f)
+        )
     }
 }
