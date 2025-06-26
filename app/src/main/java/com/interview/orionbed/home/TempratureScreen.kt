@@ -24,9 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -41,7 +39,6 @@ import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.interview.orionbed.R
 import com.interview.orionbed.ui.theme.OrionGradient
-import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
 @Composable
@@ -53,26 +50,12 @@ fun TemperatureScreen(
 ) {
     val targetTemp by viewModel.targetTemperature.collectAsState()
     val isCelsius by viewModel.isCelsius.collectAsState()
+    val animatedActual by viewModel.displayedTemperature.collectAsState()
     val isWarmingOrCooling by viewModel.isWarmingOrCooling.collectAsState()
 
-    val displayedTarget = if (isCelsius) {
-        ((targetTemp - 32) * 5 / 9f).roundToInt()
-    } else targetTemp
-
-    var animatedActual by remember { mutableStateOf(currentTemperature) }
-    val displayedActual = if (isCelsius) {
-        ((animatedActual - 32) * 5 / 9f).roundToInt()
-    } else animatedActual
-
-    // Gradually animate currentTemperature to targetTemp
-    LaunchedEffect(targetTemp) {
-        delay(2000) // Wait before starting animation
-        while (animatedActual != targetTemp) {
-            delay(1000) // delay between animation
-            if (animatedActual < targetTemp) animatedActual++
-            else if (animatedActual > targetTemp) animatedActual--
-        }
-    }
+    val displayedTarget = if (isCelsius) ((targetTemp - 32) * 5 / 9f).roundToInt() else targetTemp
+    val displayedActual =
+        if (isCelsius) ((animatedActual - 32) * 5 / 9f).roundToInt() else animatedActual
 
     val animatedTemp by animateIntAsState(
         targetValue = displayedTarget,
@@ -205,7 +188,7 @@ fun TemperatureScreen(
                 modifier = Modifier.height(24.dp),
                 contentAlignment = Alignment.Center
             ) {
-                if (animatedActual != targetTemp) {
+                if (displayedActual != displayedTarget) {
                     Text(
                         text = if (animatedActual < targetTemp) "Warming up..." else "Cooling down...",
                         fontSize = 14.sp,
