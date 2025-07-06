@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://orionbed.free.beeceptor.com/"
+    private const val BASE_URL = "http://172.16.39.23:3001/"// setup locally using mockoon
 
     @Provides
     @Singleton
